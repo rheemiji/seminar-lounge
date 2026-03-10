@@ -16,11 +16,14 @@
         .btn:hover { background: #1c65eb; }
         .btn-small { padding: 5px 10px; font-size: 0.8rem; margin-top: 5px; }
         input, textarea { padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; width: 100%; box-sizing: border-box; margin-bottom: 10px; font-family: inherit; }
+        
+        /* 목록 공통 스타일 */
         .list-row { display: flex; align-items: center; padding: 15px 10px; border-bottom: 1px solid #e2e8f0; cursor: pointer; }
+        .list-row:hover { background: #f8fafc; }
         .list-content { display: none; padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .list-content.active { display: block; }
+
         .admin-edit-tool { background: #fffde7; padding: 10px; border-radius: 8px; border: 1px dashed #fbc02d; margin-top: 10px; display: none; }
-        /* 관리자 로그인 영역 보안 강화 (평소엔 거의 안 보이게) */
         #admin-login-area { position: fixed; bottom: 20px; right: 20px; z-index: 10000; opacity: 0.5; }
         #admin-login-area:hover { opacity: 1; }
     </style>
@@ -55,6 +58,17 @@
             <input type="text" id="edit-library-desc" placeholder="자료실 설명">
             <input type="text" id="edit-link-input" placeholder="구글 링크">
             <button class="btn btn-small" onclick="updateLibrary()">자료실 업데이트</button>
+        </div>
+    </div>
+
+    <div class="card full-width">
+        <h2>❓ 자주 묻는 질문 (FAQ)</h2>
+        <div id="faq-list-container"></div>
+        <div class="admin-edit-tool admin-visible">
+            <h4 style="margin:0 0 10px 0;">새 FAQ 등록</h4>
+            <input type="text" id="new-faq-q" placeholder="질문 (예: 수료증 발급은 언제인가요?)">
+            <textarea id="new-faq-a" rows="2" placeholder="답변 내용을 입력하세요."></textarea>
+            <button class="btn btn-small" onclick="addNewFaq()">FAQ 등록</button>
         </div>
     </div>
 
@@ -98,25 +112,24 @@
     const auth = firebase.auth();
     let currentDriveLink = "";
 
-    // 🔒 보안 강화: 비밀번호 입력창 다시 활성화
     window.adminLogin = function() {
         const pw = prompt("관리자 비밀번호를 입력하세요.");
         if (!pw) return;
-        
         auth.signInWithEmailAndPassword("morethanbcorp@gmail.com", pw)
-            .then(() => alert("관리자 인증 성공!"))
+            .then(() => alert("인증 성공!"))
             .catch(() => alert("비밀번호가 틀렸습니다."));
     };
-
     window.adminLogout = function() { auth.signOut().then(() => location.reload()); };
 
     auth.onAuthStateChanged(user => {
         document.getElementById('login-btn').style.display = user ? 'none' : 'block';
         document.getElementById('logout-btn').style.display = user ? 'block' : 'none';
         document.querySelectorAll('.admin-visible').forEach(el => el.style.display = user ? 'block' : 'none');
+        renderFaqList();
         renderQnaList();
     });
 
+    // 배너/공지/자료실 데이터 로드 (기존 동일)
     db.collection("settings").doc("main").onSnapshot(doc => {
         if(doc.exists) {
             const data = doc.data();
@@ -125,45 +138,59 @@
             document.getElementById('notice-content').innerText = data.notice || "공지사항이 없습니다.";
             document.getElementById('library-desc').innerText = data.libraryDesc || "강의 교안 자료실";
             currentDriveLink = data.driveLink || "";
-            document.getElementById('edit-banner-title').value = data.bannerTitle || "";
-            document.getElementById('edit-banner-subtitle').value = data.bannerSubtitle || "";
-            document.getElementById('edit-notice-input').value = data.notice || "";
-            document.getElementById('edit-library-desc').value = data.libraryDesc || "";
-            document.getElementById('edit-link-input').value = currentDriveLink;
         }
     });
 
-    window.openDrive = function() { if(currentDriveLink) window.open(currentDriveLink); else alert("링크가 없습니다."); };
+    window.openDrive = function() { if(currentDriveLink) window.open(currentDriveLink); };
+    window.updateBanner = function() { db.collection("settings").doc("main").update({ bannerTitle: document.getElementById('edit-banner-title').value, bannerSubtitle: document.getElementById('edit-banner-subtitle').value }).then(() => alert("완료!")); };
+    window.updateNotice = function() { db.collection("settings").doc("main").update({ notice: document.getElementById('edit-notice-input').value }).then(() => alert("완료!")); };
+    window.updateLibrary = function() { db.collection("settings").doc("main").update({ libraryDesc: document.getElementById('edit-library-desc').value, driveLink: document.getElementById('edit-link-input').value }).then(() => alert("완료!")); };
 
-    window.updateBanner = function() {
-        db.collection("settings").doc("main").update({
-            bannerTitle: document.getElementById('edit-banner-title').value,
-            bannerSubtitle: document.getElementById('edit-banner-subtitle').value
-        }).then(() => alert("업데이트 완료!"));
+    // --- ✨ FAQ 기능 ---
+    window.addNewFaq = function() {
+        const question = document.getElementById('new-faq-q').value;
+        const answer = document.getElementById('new-faq-a').value;
+        if (!question || !answer) return alert("내용을 입력해주세요.");
+        db.collection("faq").add({ question, answer, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(() => { alert("FAQ가 등록되었습니다."); document.getElementById('new-faq-q').value=''; document.getElementById('new-faq-a').value=''; });
     };
 
-    window.updateNotice = function() {
-        db.collection("settings").doc("main").update({ notice: document.getElementById('edit-notice-input').value }).then(() => alert("업데이트 완료!"));
-    };
+    let faqData = [];
+    db.collection("faq").orderBy("createdAt", "asc").onSnapshot(snapshot => {
+        faqData = [];
+        snapshot.forEach(doc => faqData.push({ id: doc.id, ...doc.data() }));
+        renderFaqList();
+    });
 
-    window.updateLibrary = function() {
-        db.collection("settings").doc("main").update({
-            libraryDesc: document.getElementById('edit-library-desc').value,
-            driveLink: document.getElementById('edit-link-input').value
-        }).then(() => alert("업데이트 완료!"));
-    };
+    function renderFaqList() {
+        const container = document.getElementById('faq-list-container');
+        container.innerHTML = '';
+        const isAdmin = auth.currentUser !== null;
+        faqData.forEach((item) => {
+            container.innerHTML += `
+                <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
+                    <div style="color:#2979ff; font-weight:bold; margin-right:10px;">Q.</div>
+                    <div class="list-title">${item.question}</div>
+                </div>
+                <div class="list-content">
+                    <div style="display:flex;">
+                        <div style="color:#ff4d4d; font-weight:bold; margin-right:10px;">A.</div>
+                        <div style="line-height:1.6;">${item.answer}</div>
+                    </div>
+                    ${isAdmin ? `<button class="btn btn-small" style="background:#ff4d4d; margin-top:10px;" onclick="deleteFaq('${item.id}')">FAQ 삭제</button>` : ''}
+                </div>`;
+        });
+    }
+    window.deleteFaq = function(id) { if(confirm("삭제할까요?")) db.collection("faq").doc(id).delete(); };
 
+    // --- Q&A 기능 ---
     window.addNewQuestion = function() {
         const author = document.getElementById('new-author').value || "익명";
         const title = document.getElementById('new-title').value;
         const content = document.getElementById('new-content').value;
-        if (!title || !content) return alert("제목과 내용을 입력해주세요.");
-        db.collection("qna_board").add({
-            author, title, content,
-            date: new Date().toLocaleDateString(),
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            adminReply: ""
-        }).then(() => { alert("질문이 등록되었습니다."); document.getElementById('new-title').value=''; document.getElementById('new-content').value=''; });
+        if (!title || !content) return alert("입력 오류");
+        db.collection("qna_board").add({ author, title, content, date: new Date().toLocaleDateString(), createdAt: firebase.firestore.FieldValue.serverTimestamp(), adminReply: "" })
+            .then(() => { alert("질문 등록!"); document.getElementById('new-title').value=''; document.getElementById('new-content').value=''; });
     };
 
     let qnaData = [];
@@ -196,16 +223,8 @@
                 </div>`;
         });
     }
-
-    window.saveReply = function(id) {
-        db.collection("qna_board").doc(id).update({ adminReply: document.getElementById(`reply-text-${id}`).value }).then(() => alert("저장 완료!"));
-    };
-
-    window.deleteQuestion = function(id) {
-        if(confirm("이 질문을 정말 삭제하시겠습니까?")) {
-            db.collection("qna_board").doc(id).delete().then(() => alert("삭제되었습니다."));
-        }
-    };
+    window.saveReply = function(id) { db.collection("qna_board").doc(id).update({ adminReply: document.getElementById(`reply-text-${id}`).value }).then(() => alert("저장 완료")); };
+    window.deleteQuestion = function(id) { if(confirm("삭제하시겠습니까?")) db.collection("qna_board").doc(id).delete(); };
 </script>
 </body>
 </html>
