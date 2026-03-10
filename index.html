@@ -8,9 +8,11 @@
     <style>
         body { font-family: 'Pretendard', sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; color: #333; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* 홈/라운지 전환 */
         #home-view { text-align: center; padding: 100px 20px; }
         .batch-card { max-width: 500px; margin: 50px auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s; border: 2px solid #e2e8f0; }
-        .batch-card:hover { transform: translateY(-10px); border-color: #2979ff; }
+        .batch-card:hover { transform: translateY(-5px); border-color: #2979ff; }
         .batch-thumb { background: linear-gradient(135deg, #4dabf7, #217afc); height: 200px; display: flex; align-items: center; justify-content: center; color: white; }
         .batch-thumb h2 { font-size: 2.2rem; margin: 0; font-weight: 800; letter-spacing: -1px; }
         .batch-info { padding: 20px; font-weight: 700; color: #2979ff; font-size: 1.2rem; background: #fff; }
@@ -25,30 +27,41 @@
         h2 { font-size: 1.2rem; border-bottom: 2px solid #2979ff; padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 8px; }
         
         .btn { padding: 10px 18px; background: #2979ff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-family: inherit; }
-        .btn-red { background: #ff4d4d; }
         .btn-small { padding: 5px 10px; font-size: 0.8rem; margin-top: 5px; }
+        .btn-red { background: #ff4d4d !important; }
         input, textarea { padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; width: 100%; box-sizing: border-box; margin-bottom: 10px; font-family: inherit; }
         
-        .list-row { display: flex; align-items: center; padding: 15px 10px; border-bottom: 1px solid #e2e8f0; cursor: pointer; }
+        /* Q&A 리스트 스타일 강화 */
+        .list-row { display: flex; align-items: center; padding: 15px 10px; border-bottom: 1px solid #e2e8f0; cursor: pointer; font-size: 0.95rem; }
         .list-row:hover { background: #f8fafc; }
+        .col-status { width: 80px; font-weight: bold; text-align: center; }
+        .col-title { flex: 1; padding: 0 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .col-meta { width: 180px; font-size: 0.85rem; color: #888; text-align: right; }
+        
         .list-content { display: none; padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .list-content.active { display: block; }
         
-        .admin-tool { background: #fffde7; padding: 15px; border-radius: 8px; border: 1px dashed #fbc02d; margin-top: 15px; display: none; text-align: left; color: #333; }
-        #admin-btn { position: fixed; bottom: 20px; right: 20px; opacity: 0.2; background: none; border: none; cursor: pointer; font-size: 10px; color: #999; }
+        .admin-tool { background: #fffde7; padding: 15px; border-radius: 8px; border: 1px dashed #fbc02d; margin-top: 15px; display: none !important; }
+        .admin-active .admin-tool { display: block !important; }
         
-        @media (max-width: 768px) { .dashboard { grid-template-columns: 1fr; } }
+        #admin-btn-area { position: fixed; bottom: 20px; right: 20px; z-index: 10000; opacity: 0.3; }
+        #admin-btn-area:hover { opacity: 1; }
+        
+        @media (max-width: 768px) { 
+            .dashboard { grid-template-columns: 1fr; } 
+            .col-meta { width: 100px; }
+        }
     </style>
 </head>
-<body>
+<body id="main-body">
 
 <div class="container">
     <div id="home-view">
-        <h1 style="font-size: 2.2rem; letter-spacing: -1px; margin-bottom: 10px;">성공적인 협상 세미나 라운지</h1>
-        <p style="color: #666; margin-bottom: 30px;">기수를 선택하고 비밀번호를 입력해 주세요.</p>
+        <h1 style="font-size: 2.2rem; letter-spacing: -1px;">성공적인 협상 세미나 라운지</h1>
+        <p style="color: #666;">기수를 선택하고 비밀번호를 입력해 주세요.</p>
         <div class="batch-card" onclick="checkBatchPassword()">
             <div class="batch-thumb"><h2>구매 협상 1기</h2></div>
-            <div class="batch-info">바로가기</div>
+            <div class="batch-info">입장하기</div>
         </div>
     </div>
 
@@ -56,10 +69,10 @@
         <div class="header-banner">
             <button class="back-btn" onclick="location.reload()">← 뒤로가기</button>
             <h1 id="v-title">구매 협상 1기 라운지</h1>
-            <p id="v-subtitle">반갑습니다! 세미나 자료와 Q&A를 확인하세요.</p>
-            <div class="admin-tool admin-visible" style="max-width: 500px; margin: 20px auto 0 auto;">
-                <input type="text" id="e-title" placeholder="배너 제목 수정">
-                <input type="text" id="e-subtitle" placeholder="배너 부제목 수정">
+            <p id="v-subtitle">반갑습니다!</p>
+            <div class="admin-tool">
+                <input type="text" id="e-title" placeholder="배너 제목">
+                <input type="text" id="e-subtitle" placeholder="배너 부제목">
                 <button class="btn btn-small" onclick="saveBanner()">배너 업데이트</button>
             </div>
         </div>
@@ -68,7 +81,7 @@
             <div class="card">
                 <h2>📢 공지사항</h2>
                 <div id="v-notice" style="line-height:1.7; white-space:pre-wrap;">로드 중...</div>
-                <div class="admin-tool admin-visible">
+                <div class="admin-tool">
                     <textarea id="e-notice" rows="3"></textarea>
                     <button class="btn btn-small" onclick="saveNotice()">공지 업데이트</button>
                 </div>
@@ -76,22 +89,20 @@
 
             <div class="card">
                 <h2>📁 자료실</h2>
-                <p id="v-lib-text" style="color:#666; font-size:0.9rem; margin-bottom:15px;">로드 중...</p>
-                <button class="btn" style="width:100%;" onclick="openLib()">강의 교안 다운로드</button>
-                <div class="admin-tool admin-visible">
-                    <input type="text" id="e-lib-text" placeholder="자료실 설명 문구 수정">
+                <p id="v-lib-text" style="color:#666; font-size:0.9rem;">자료를 확인하세요.</p>
+                <button class="btn" style="width:100%; margin-top:10px;" onclick="openLib()">강의 교안 다운로드</button>
+                <div class="admin-tool">
+                    <input type="text" id="e-lib-text" placeholder="자료실 설명">
                     <input type="text" id="e-lib-link" placeholder="구글 드라이브 링크">
                     <button class="btn btn-small" onclick="saveLib()">자료실 업데이트</button>
                 </div>
             </div>
 
             <div class="card full-width">
-                <h2>📌 FAQ (자주 묻는 질문)</h2>
-                <div id="faq-list-container"></div>
-                <div class="admin-tool admin-visible">
-                    <h4 style="margin:0 0 10px 0;">새 FAQ 등록</h4>
-                    <input type="text" id="new-faq-q" placeholder="질문 입력">
-                    <textarea id="new-faq-a" rows="2" placeholder="답변 입력"></textarea>
+                <h2>📌 FAQ</h2>
+                <div id="faq-list"></div>
+                <div class="admin-tool">
+                    <input type="text" id="faq-q" placeholder="질문"><textarea id="faq-a" placeholder="답변"></textarea>
                     <button class="btn btn-small" onclick="addFaq()">FAQ 추가</button>
                 </div>
             </div>
@@ -100,11 +111,17 @@
                 <h2>💬 Q&A 게시판</h2>
                 <div style="background:#f8fafc; padding:20px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:20px;">
                     <div style="display:flex; gap:10px;">
-                        <input type="text" id="q-author" placeholder="닉네임" style="width:120px;">
-                        <input type="text" id="q-title" placeholder="질문 제목" style="flex:1;">
+                        <input type="text" id="q-author" placeholder="닉네임 (예: 령)" style="width:150px;">
+                        <input type="text" id="q-title" placeholder="질문 제목을 입력하세요" style="flex:1;">
                     </div>
-                    <textarea id="q-content" placeholder="질문 내용을 적어주세요." rows="3"></textarea>
+                    <textarea id="q-content" placeholder="질문 내용을 상세히 적어주세요." rows="3"></textarea>
                     <div style="text-align:right;"><button class="btn" onclick="addQa()">질문 등록</button></div>
+                </div>
+                
+                <div style="display:flex; background:#eee; padding:10px; font-weight:bold; font-size:0.85rem; border-radius:5px 5px 0 0;">
+                    <div style="width:80px; text-align:center;">상태</div>
+                    <div style="flex:1; padding-left:15px;">제목</div>
+                    <div style="width:180px; text-align:right;">작성자 | 날짜</div>
                 </div>
                 <div id="qa-list"></div>
             </div>
@@ -112,7 +129,10 @@
     </div>
 </div>
 
-<button id="admin-btn" onclick="adminLogin()">Admin Access</button>
+<div id="admin-btn-area">
+    <button id="login-btn" onclick="adminLogin()" style="border:none; background:none; color:#ccc; cursor:pointer;">Admin</button>
+    <button id="logout-btn" style="display:none; color:red; border:none; background:none; cursor:pointer;" onclick="adminLogout()">Logout</button>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
@@ -132,22 +152,24 @@
     const auth = firebase.auth();
 
     window.checkBatchPassword = function() {
-        const input = prompt("수강생 비밀번호를 입력해 주세요.");
+        const input = prompt("수강생 비밀번호(202605)");
         if(input === "202605") {
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('lounge-view').style.display = 'block';
             loadData();
-        } else if(input !== null) alert("비밀번호 불일치");
+        } else if(input !== null) alert("오답입니다.");
     }
 
     window.adminLogin = function() {
-        const pw = prompt("관리자 암호");
+        const pw = prompt("Admin PW");
         auth.signInWithEmailAndPassword("morethanbcorp@gmail.com", pw || "").catch(()=>alert("실패"));
     }
+    window.adminLogout = function() { auth.signOut().then(()=>location.reload()); }
 
     auth.onAuthStateChanged(user => {
-        document.querySelectorAll('.admin-visible').forEach(el => el.style.display = user ? 'block' : 'none');
-        loadData();
+        if(user) document.getElementById('main-body').classList.add('admin-active');
+        document.getElementById('login-btn').style.display = user ? 'none' : 'inline';
+        document.getElementById('logout-btn').style.display = user ? 'inline' : 'none';
     });
 
     function loadData() {
@@ -155,12 +177,10 @@
             if(doc.exists) {
                 const d = doc.data();
                 document.getElementById('v-title').innerText = d.bannerTitle || "구매 협상 1기 라운지";
-                document.getElementById('v-subtitle').innerText = d.bannerSubtitle || "반갑습니다! 자료와 Q&A를 확인하세요.";
-                document.getElementById('v-notice').innerText = d.notice || "등록된 공지가 없습니다.";
-                document.getElementById('v-lib-text').innerText = d.libText || "주차별 강의 교안을 확인하세요.";
+                document.getElementById('v-subtitle').innerText = d.bannerSubtitle || "반갑습니다!";
+                document.getElementById('v-notice').innerText = d.notice || "공지 없음";
+                document.getElementById('v-lib-text').innerText = d.libText || "자료실";
                 window.libLink = d.libLink || "";
-
-                // 어드민 입력창 초기화
                 document.getElementById('e-title').value = d.bannerTitle || "";
                 document.getElementById('e-subtitle').value = d.bannerSubtitle || "";
                 document.getElementById('e-notice').value = d.notice || "";
@@ -171,69 +191,37 @@
         loadFaqs(); loadQnas();
     }
 
-    // --- 🛠️ 어드민 업데이트 함수들 ---
-    window.saveBanner = function() {
-        db.collection("settings").doc("batch1").update({
-            bannerTitle: document.getElementById('e-title').value,
-            bannerSubtitle: document.getElementById('e-subtitle').value
-        }).then(()=>alert("배너 업데이트 완료!"));
-    }
-    window.saveNotice = function() { db.collection("settings").doc("batch1").update({ notice: document.getElementById('e-notice').value }).then(()=>alert("공지 저장됨")); }
-    window.saveLib = function() {
-        db.collection("settings").doc("batch1").update({
-            libText: document.getElementById('e-lib-text').value,
-            libLink: document.getElementById('e-lib-link').value
-        }).then(()=>alert("자료실 업데이트 완료!"));
-    }
-    window.openLib = function() { if(window.libLink) window.open(window.libLink); else alert("링크 없음"); }
+    window.saveBanner = function() { db.collection("settings").doc("batch1").update({ bannerTitle: document.getElementById('e-title').value, bannerSubtitle: document.getElementById('e-subtitle').value }).then(()=>alert("수정 완료")); }
+    window.saveNotice = function() { db.collection("settings").doc("batch1").update({ notice: document.getElementById('e-notice').value }).then(()=>alert("수정 완료")); }
+    window.saveLib = function() { db.collection("settings").doc("batch1").update({ libText: document.getElementById('e-lib-text').value, libLink: document.getElementById('e-lib-link').value }).then(()=>alert("수정 완료")); }
+    window.openLib = function() { if(window.libLink) window.open(window.libLink); }
 
-    // --- 📌 FAQ 관리 (수정/삭제) ---
+    // FAQ
     window.addFaq = function() {
-        const q = document.getElementById('new-faq-q').value;
-        const a = document.getElementById('new-faq-a').value;
-        if(!q || !a) return;
-        db.collection("faqs_batch1").add({ q, a, createdAt: firebase.firestore.FieldValue.serverTimestamp() }).then(()=>alert("FAQ 등록완료"));
+        db.collection("faqs_batch1").add({ q: document.getElementById('faq-q').value, a: document.getElementById('faq-a').value, createdAt: firebase.firestore.FieldValue.serverTimestamp() }).then(()=>alert("FAQ 추가완료"));
     }
-
     function loadFaqs() {
         db.collection("faqs_batch1").orderBy("createdAt", "asc").onSnapshot(snap => {
-            const container = document.getElementById('faq-list-container'); container.innerHTML = '';
+            const cont = document.getElementById('faq-list'); cont.innerHTML = '';
             snap.forEach(doc => {
                 const d = doc.data();
-                container.innerHTML += `
-                    <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
-                        <b style="color:#2979ff; margin-right:10px;">Q.</b> ${d.q}
-                    </div>
-                    <div class="list-content">
-                        <div style="background:#f0f7ff; padding:15px; border-radius:8px; border-left:4px solid #2979ff;"><b>A.</b> ${d.a}</div>
-                        ${auth.currentUser ? `
-                            <div style="margin-top:10px; border-top:1px dashed #ccc; padding-top:10px;">
-                                <input type="text" id="edit-faq-q-${doc.id}" value="${d.q}">
-                                <textarea id="edit-faq-a-${doc.id}">${d.a}</textarea>
-                                <button class="btn btn-small" onclick="updateFaq('${doc.id}')">수정완료</button>
-                                <button class="btn btn-small btn-red" onclick="deleteFaq('${doc.id}')">삭제</button>
-                            </div>` : ""}
-                    </div>`;
+                cont.innerHTML += `<div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')"><b style="color:#2979ff; margin-right:10px;">Q.</b> ${d.q}</div>
+                <div class="list-content"><div style="background:#f0f7ff; padding:15px; border-radius:8px; border-left:4px solid #2979ff;"><b>A.</b> ${d.a}</div>
+                <div class="admin-tool"><button class="btn btn-small btn-red" onclick="deleteItem('faqs_batch1','${doc.id}')">FAQ 삭제</button></div></div>`;
             });
         });
     }
-    window.updateFaq = function(id) {
-        db.collection("faqs_batch1").doc(id).update({
-            q: document.getElementById('edit-faq-q-'+id).value,
-            a: document.getElementById('edit-faq-a-'+id).value
-        }).then(()=>alert("수정 완료!"));
-    }
-    window.deleteFaq = function(id) { if(confirm("이 FAQ를 삭제하시겠습니까?")) db.collection("faqs_batch1").doc(id).delete(); }
 
-    // --- 💬 Q&A 관리 (수정/삭제) ---
+    // Q&A
     window.addQa = function() {
         const title = document.getElementById('q-title').value;
         const content = document.getElementById('q-content').value;
-        if(!title || !content) return;
+        if(!title || !content) return alert("내용을 채워주세요.");
         db.collection("qnas_batch1").add({
             author: document.getElementById('q-author').value || "익명",
-            title, content, reply: "", createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(()=> { alert("질문 등록완료"); document.getElementById('q-title').value=''; document.getElementById('q-content').value=''; });
+            title, content, reply: "", createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            date: new Date().toLocaleDateString()
+        }).then(()=> { alert("등록완료"); document.getElementById('q-title').value=''; document.getElementById('q-content').value=''; });
     }
 
     function loadQnas() {
@@ -241,29 +229,35 @@
             const list = document.getElementById('qa-list'); list.innerHTML = '';
             snap.forEach(doc => {
                 const d = doc.data();
-                const status = d.reply ? "<b style='color:#2979ff'>[답변완료]</b>" : "<b style='color:#999'>[대기중]</b>";
+                const status = d.reply ? "<span style='color:#2979ff'>[답변완료]</span>" : "<span style='color:#999'>[답변대기]</span>";
+                const dateText = d.date || "기록없음";
+                
                 list.innerHTML += `
                     <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
-                        <div style="flex:1">${status} ${d.title}</div>
-                        <div style="font-size:0.8rem; color:#999;">${d.author}</div>
+                        <div class="col-status">${status}</div>
+                        <div class="col-title">${d.title}</div>
+                        <div class="col-meta">${d.author} | ${dateText}</div>
                     </div>
                     <div class="list-content">
-                        <p>Q: ${d.content}</p>
-                        <div style="background:#f0f7ff; padding:15px; border-radius:8px;">A: ${d.reply || "관리자가 답변을 준비 중입니다."}</div>
-                        ${auth.currentUser ? `
-                            <div style="margin-top:10px; border-top:1px dashed #ccc; padding-top:10px;">
-                                <textarea id="reply-${doc.id}" style="margin-top:10px;">${d.reply || ""}</textarea>
-                                <button class="btn btn-small" onclick="saveReply('${doc.id}')">답변저장</button>
-                                <button class="btn btn-small btn-red" onclick="deleteQa('${doc.id}')">질문삭제</button>
-                            </div>` : ""}
+                        <p style="margin-bottom:15px;"><strong>Q:</strong> ${d.content}</p>
+                        <div style="background:#f0f7ff; padding:15px; border-radius:8px; border-left:4px solid #2979ff; position:relative;">
+                            <strong>A:</strong> ${d.reply || "관리자가 답변을 준비 중입니다."}
+                            ${auth.currentUser && d.reply ? `<button class="btn btn-small btn-red" style="position:absolute; top:10px; right:10px;" onclick="saveReply('${doc.id}', '')">답변만 삭제</button>` : ""}
+                        </div>
+                        <div class="admin-tool" style="margin-top:10px;">
+                            <textarea id="reply-${doc.id}" style="margin-top:10px;">${d.reply || ""}</textarea>
+                            <button class="btn btn-small" onclick="saveReply('${doc.id}', document.getElementById('reply-${doc.id}').value)">답변 저장/수정</button>
+                            <button class="btn btn-small btn-red" onclick="deleteItem('qnas_batch1','${doc.id}')">질문 전체 삭제</button>
+                        </div>
                     </div>`;
             });
         });
     }
-    window.saveReply = function(id) {
-        db.collection("qnas_batch1").doc(id).update({ reply: document.getElementById('reply-'+id).value }).then(()=>alert("답변 저장됨"));
+
+    window.saveReply = function(id, text) {
+        db.collection("qnas_batch1").doc(id).update({ reply: text }).then(()=>alert("처리가 완료되었습니다."));
     }
-    window.deleteQa = function(id) { if(confirm("이 질문을 삭제하시겠습니까?")) db.collection("qnas_batch1").doc(id).delete(); }
+    window.deleteItem = function(col, id) { if(confirm("정말 삭제하시겠습니까?")) db.collection(col).doc(id).delete(); }
 </script>
 </body>
 </html>
