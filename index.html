@@ -4,280 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>성공적인 협상 제1기 세미나 라운지</title>
-    
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    
     <style>
-        /* 디자인은 기존과 완벽히 동일합니다 */
-        body { font-family: 'Pretendard', 'Malgun Gothic', sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
-        .header-banner { background: linear-gradient(135deg, #2979ff 0%, #1c65eb 100%); color: white; text-align: center; padding: 50px 20px; border-radius: 12px; max-width: 1000px; width: 100%; box-sizing: border-box; margin: 0 auto 30px auto; box-shadow: 0 4px 12px rgba(41, 121, 255, 0.15); }
-        .header-banner h1 { margin: 0; font-size: 2.4rem; font-weight: 700; letter-spacing: -1px; }
-        .header-banner p { margin: 15px 0 0 0; font-size: 1.1rem; color: rgba(255, 255, 255, 0.9); }
-        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1000px; width: 100%; box-sizing: border-box; margin: 0 auto; }
+        body { font-family: 'Pretendard', sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
+        .header-banner { background: linear-gradient(135deg, #2979ff 0%, #1c65eb 100%); color: white; text-align: center; padding: 50px 20px; border-radius: 12px; max-width: 1000px; margin: 0 auto 30px auto; box-shadow: 0 4px 12px rgba(41, 121, 255, 0.15); }
+        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1000px; margin: 0 auto; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .card.full-width { grid-column: 1 / -1; }
         h2 { font-size: 1.3rem; color: #1a202c; border-bottom: 2px solid #2979ff; padding-bottom: 10px; margin-top: 0; }
-        h3 { font-size: 1.1rem; color: #2d3748; margin-top: 20px; margin-bottom: 10px; }
-        ul { line-height: 1.8; padding-left: 20px; }
-        .btn { padding: 10px 18px; background: #2979ff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-family: inherit; transition: background 0.2s;}
-        .btn:hover { background: #1c65eb; }
-        .btn-outline { background: white; color: #2979ff; border: 1px solid #2979ff; }
-        .btn-outline:hover { background: #f0f5ff; }
-        input[type="text"], textarea { padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
-        input[type="text"]:focus, textarea:focus { outline: none; border-color: #2979ff; box-shadow: 0 0 0 3px rgba(41, 121, 255, 0.1); }
-        .list-container { border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
-        .list-row { display: flex; align-items: center; padding: 15px 10px; border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: background 0.2s; }
-        .list-row:last-child { border-bottom: none; }
-        .list-row:hover { background: #f8fafc; }
-        .list-num { width: 50px; text-align: center; color: #718096; font-size: 0.9rem; font-weight: bold; }
-        .list-title { flex: 1; font-weight: 600; color: #1a202c; padding: 0 10px; }
-        .list-meta { width: 140px; text-align: right; font-size: 0.85rem; color: #718096; }
-        .list-icon { width: 30px; text-align: center; color: #cbd5e1; font-size: 1.2rem; }
+        .btn { padding: 10px 18px; background: #2979ff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        input, textarea { padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+        .list-row { display: flex; align-items: center; padding: 15px 10px; border-bottom: 1px solid #e2e8f0; cursor: pointer; }
         .list-content { display: none; padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .list-content.active { display: block; }
-        .q-box { margin-bottom: 20px; color: #2d3748; line-height: 1.6; }
-        .admin-reply { background: white; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 3px solid #2979ff; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .badge { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 4px; color: white; font-weight: bold; margin-right: 8px; font-size: 0.85rem; }
-        .badge.q { background: #e53e3e; } 
-        .badge.a { background: #2979ff; } 
-        .comments-section { margin-top: 15px; border-top: 1px dashed #cbd5e1; padding-top: 15px; }
-        .comment-item { font-size: 0.95rem; margin-bottom: 8px; padding: 10px; background: #edf2f7; border-radius: 6px; }
-        .pagination { display: flex; justify-content: center; margin-top: 20px; gap: 5px; }
-        .page-btn { padding: 6px 12px; border: 1px solid #e2e8f0; background: white; border-radius: 4px; cursor: pointer; color: #4a5568; }
-        .page-btn.active { background: #2979ff; color: white; border-color: #2979ff; font-weight: bold; }
-        @media (max-width: 768px) { .dashboard { grid-template-columns: 1fr; } .header-banner { padding: 40px 15px; } .list-meta { display: none; } }
+        .admin-reply-box { background: #eef2ff; padding: 15px; border-radius: 8px; margin-top: 10px; border-left: 4px solid #2979ff; }
+        #admin-login-area { position: fixed; bottom: 10px; right: 10px; opacity: 0.3; }
+        #admin-login-area:hover { opacity: 1; }
+        .admin-only { display: none; } /* 로그인 전엔 안 보임 */
     </style>
 </head>
 <body>
 
 <div class="header-banner">
     <h1>성공적인 협상 제1기 세미나 라운지</h1>
-    <p>환영합니다! 교육 진행 상황과 필수 자료를 한눈에 확인하세요.</p>
+    <p>반갑습니다! 질문을 남겨주시면 정성껏 답변해 드리겠습니다.</p>
 </div>
 
 <div class="dashboard">
     <div class="card">
-        <h2>📢 1. 공지사항</h2>
-        <ul>
-            <li><strong>1주차:</strong> 오리엔테이션 및 구매 전략 기초 <span style="color: #2979ff; font-weight: bold;">(완료)</span></li>
-            <li><strong>2주차:</strong> 공급망 관리(SCM) 심화 프로세스 <span style="color: #2979ff; font-weight: bold;">(현재)</span></li>
-            <li><strong>3주차:</strong> 협상 스킬 및 계약 실무 (예정)</li>
-            <li><strong>4주차:</strong> 최종 프로젝트 발표 및 수료식 (예정)</li>
+        <h2>📢 공지사항</h2>
+        <ul id="notice-list">
+            <li>현재 2주차 세미나 진행 중입니다.</li>
+            <li>과제 제출 기한: 이번 주 일요일 자정까지</li>
         </ul>
     </div>
 
     <div class="card">
-        <h2>📁 2. 자료실</h2>
-        <p style="color: #666; font-size: 0.95rem; margin-top: 15px; margin-bottom: 15px;">주차별 강의 교안을 미리 확인해주세요.</p>
-        <div style="border: 1px solid #e2e8f0; padding: 15px; background: #f8fafc; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 600;">[다운로드] 주차별 강의 교안</span>
-            <button class="btn" onclick="alert('파일 다운로드 기능은 곧 오픈됩니다!')">다운로드</button>
-        </div>
-    </div>
-
-    <div class="card full-width">
-        <h2>📌 FAQ (자주 묻는 질문)</h2>
-        <div class="list-container">
-            <div class="list-row" onclick="toggleAccordion('faq-1')">
-                <div class="list-num" style="color:#2979ff;">Q</div>
-                <div class="list-title">강의 교안은 언제 업로드 되나요?</div>
-                <div class="list-icon">▼</div>
-            </div>
-            <div class="list-content" id="faq-1">
-                <div style="display: flex;">
-                    <span class="badge a">A</span>
-                    <div style="flex: 1; color: #4a5568;">매주 강의 전날(목요일) 오후 2시에 '자료실'을 통해 일괄 업로드됩니다. 미리 다운로드하여 수업을 준비해 주시기 바랍니다.</div>
-                </div>
-            </div>
-            
-            <div class="list-row" onclick="toggleAccordion('faq-2')">
-                <div class="list-num" style="color:#2979ff;">Q</div>
-                <div class="list-title">과제 제출 기한을 놓치면 어떻게 되나요?</div>
-                <div class="list-icon">▼</div>
-            </div>
-            <div class="list-content" id="faq-2">
-                <div style="display: flex;">
-                    <span class="badge a">A</span>
-                    <div style="flex: 1; color: #4a5568;">기한 내 제출이 원칙입니다만, 부득이한 사정이 있으신 경우 일요일 자정까지 제출하시면 정상 참작됩니다. 그 이후 제출 건에 대해서는 Q&A 게시판에 별도 문의 바랍니다.</div>
-                </div>
-            </div>
-
-            <div class="list-row" onclick="toggleAccordion('faq-3')">
-                <div class="list-num" style="color:#2979ff;">Q</div>
-                <div class="list-title">수료증은 어떻게 발급 받나요?</div>
-                <div class="list-icon">▼</div>
-            </div>
-            <div class="list-content" id="faq-3">
-                <div style="display: flex;">
-                    <span class="badge a">A</span>
-                    <div style="flex: 1; color: #4a5568;">4주차 최종 수료식 완료 후, 익주 월요일에 가입하신 이메일로 수료증 PDF 파일이 일괄 발송됩니다. 실물 수료증이 필요하신 분은 별도 신청을 받습니다.</div>
-                </div>
-            </div>
-        </div>
+        <h2>📁 자료실</h2>
+        <p>강의 교안 및 참고 자료 (구글 드라이브)</p>
+        <button class="btn" onclick="window.open('여기에_구글드라이브_공유링크_넣으세요')">자료 다운로드</button>
     </div>
 
     <div class="card full-width">
         <h2>💬 Q&A 게시판</h2>
-        <p style="color: #666; font-size: 0.95rem; margin-bottom: 20px;">궁금한 점은 언제든 물어보세요.</p>
-        
-        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-            <h3 style="margin-top: 0; font-size: 1rem;">새 질문 작성하기</h3>
-            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <input type="text" id="new-author" placeholder="닉네임 (예: 령)" style="width: 120px;">
-                <input type="text" id="new-title" placeholder="질문 제목을 입력하세요" style="flex: 1;">
-            </div>
-            <textarea id="new-content" rows="3" style="width: 100%; margin-bottom: 10px;" placeholder="질문 내용을 상세히 적어주세요."></textarea>
-            <div style="text-align: right;">
-                <button class="btn" onclick="addNewQuestion()">질문 등록</button>
-            </div>
+        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <input type="text" id="new-author" placeholder="닉네임" style="width: 150px;">
+            <input type="text" id="new-title" placeholder="질문 제목">
+            <textarea id="new-content" rows="3" placeholder="내용을 입력하세요"></textarea>
+            <button class="btn" onclick="addNewQuestion()">질문 등록</button>
         </div>
-        
-        <div class="list-container" id="qna-list-container">
-            <div style="padding: 20px; text-align: center; color: #718096;">데이터베이스에 연결 중입니다... 잠시만 기다려주세요!</div>
-        </div>
-
-        <div class="pagination" id="pagination-container"></div>
+        <div id="qna-list-container"></div>
     </div>
+</div>
+
+<div id="admin-login-area">
+    <button onclick="adminLogin()" style="font-size: 10px;">Admin</button>
+    <button id="logout-btn" class="admin-only" onclick="adminLogout()" style="font-size: 10px;">Logout</button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
 <script>
-    // 🔑 파이어베이스 연결 설정 (대표님의 열쇠)
     const firebaseConfig = {
       apiKey: "AIzaSyDlKSAJkfZlAL2aXFmsZrpLqHD24FAHFVU",
       authDomain: "seminar-lounge.firebaseapp.com",
       projectId: "seminar-lounge",
       storageBucket: "seminar-lounge.firebasestorage.app",
       messagingSenderId: "330248826278",
-      appId: "1:330248826278:web:c42f52b7193d8813e67367",
-      measurementId: "G-X1X7HWS8XS"
+      appId: "1:330248826278:web:c42f52b7193d8813e67367"
     };
 
-    // Firebase 앱과 데이터베이스 초기화
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const auth = firebase.auth();
 
-    let qnaData = [];
-    let currentPage = 1;
-    const itemsPerPage = 10;
-
-    // 아코디언 열고 닫기
-    function toggleAccordion(id) {
-        const element = document.getElementById(id);
-        if (element.classList.contains('active')) {
-            element.classList.remove('active');
-        } else {
-            element.classList.add('active');
+    // 1. 관리자 로그인 기능
+    function adminLogin() {
+        const email = "morethanbcorp@gmail.com";
+        const password = prompt("관리자 비밀번호를 입력하세요.");
+        if(password) {
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => alert("관리자로 인증되었습니다."))
+                .catch(err => alert("비밀번호가 틀렸습니다."));
         }
     }
 
-    // ✨ 데이터베이스에서 실시간으로 글 불러오기
-    db.collection("qna_board").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-        qnaData = [];
-        snapshot.forEach((doc) => {
-            qnaData.push({ id: doc.id, ...doc.data() });
-        });
-        renderQnaList();
+    function adminLogout() {
+        auth.signOut().then(() => { alert("로그아웃 되었습니다."); location.reload(); });
+    }
+
+    // 로그인 상태 감시 (관리자면 편집창 보여주기)
+    auth.onAuthStateChanged(user => {
+        const adminElements = document.querySelectorAll('.admin-only');
+        adminElements.forEach(el => el.style.display = user ? 'block' : 'none');
+        document.getElementById('logout-btn').style.display = user ? 'inline' : 'none';
     });
 
-    // 화면에 리스트 그리기
-    function renderQnaList() {
+    // 2. 질문 등록
+    function addNewQuestion() {
+        const author = document.getElementById('new-author').value || "익명";
+        const title = document.getElementById('new-title').value;
+        const content = document.getElementById('new-content').value;
+
+        if(!title || !content) return alert("내용을 입력해주세요.");
+
+        db.collection("qna_board").add({
+            author, title, content,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            date: new Date().toLocaleDateString(),
+            adminReply: ""
+        }).then(() => {
+            alert("등록되었습니다!");
+            location.reload();
+        });
+    }
+
+    // 3. 목록 불러오기
+    db.collection("qna_board").orderBy("createdAt", "desc").onSnapshot(snapshot => {
         const container = document.getElementById('qna-list-container');
         container.innerHTML = '';
-
-        if (qnaData.length === 0) {
-            container.innerHTML = '<div style="padding: 20px; text-align: center; color: #718096;">아직 등록된 질문이 없습니다. 첫 번째 질문을 남겨보세요!</div>';
-            return;
-        }
-
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const pageData = qnaData.slice(startIndex, endIndex);
-
-        let virtualNumber = qnaData.length - startIndex;
-
-        pageData.forEach(item => {
-            const replyBadge = item.adminReply 
-                ? `<span style="color:#2979ff; font-weight:bold; font-size:0.8rem; border:1px solid #2979ff; padding:2px 5px; border-radius:3px; margin-left:10px;">답변완료</span>`
-                : `<span style="color:#718096; font-size:0.8rem; border:1px solid #cbd5e1; padding:2px 5px; border-radius:3px; margin-left:10px;">확인중</span>`;
-
-            let adminReplyHTML = item.adminReply 
-                ? `<div class="admin-reply">
-                    <div style="font-weight:bold; margin-bottom:5px;"><span class="badge a">A</span> 관리자 답변</div>
-                    <div>${item.adminReply}</div>
-                   </div>` 
-                : '';
-
-            const rowHTML = `
-                <div class="list-row" onclick="toggleAccordion('qna-${item.id}')">
-                    <div class="list-num">${virtualNumber}</div>
-                    <div class="list-title">${item.title} ${replyBadge}</div>
-                    <div class="list-meta">${item.author} | ${item.date}</div>
-                    <div class="list-icon">▼</div>
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const id = doc.id;
+            const replyStatus = data.adminReply ? "<b style='color:blue'>[답변완료]</b>" : "<b style='color:gray'>[대기중]</b>";
+            
+            const html = `
+                <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
+                    <div style="flex:1"> ${replyStatus} ${data.title} </div>
+                    <div style="font-size:0.8rem; color:gray">${data.author} | ${data.date}</div>
                 </div>
-                <div class="list-content" id="qna-${item.id}">
-                    <div class="q-box">
-                        <span class="badge q">Q</span> <strong>${item.content}</strong>
+                <div class="list-content">
+                    <p><b>질문내용:</b> ${data.content}</p>
+                    <div class="admin-reply-box" id="reply-view-${id}">
+                        <b>관리자 답변:</b> ${data.adminReply || "아직 답변이 없습니다."}
                     </div>
-                    ${adminReplyHTML}
+                    <div class="admin-only" style="margin-top:10px;">
+                        <textarea id="reply-input-${id}" placeholder="답변을 입력하세요">${data.adminReply || ""}</textarea>
+                        <button class="btn" onclick="saveReply('${id}')">답변 저장/수정</button>
+                    </div>
                 </div>
             `;
-            container.innerHTML += rowHTML;
-            virtualNumber--;
+            container.innerHTML += html;
         });
-        renderPagination();
-    }
+    });
 
-    function renderPagination() {
-        const container = document.getElementById('pagination-container');
-        container.innerHTML = '';
-        const totalPages = Math.ceil(qnaData.length / itemsPerPage);
-        for (let i = 1; i <= totalPages; i++) {
-            const activeClass = (i === currentPage) ? 'active' : '';
-            container.innerHTML += `<button class="page-btn ${activeClass}" onclick="changePage(${i})">${i}</button>`;
-        }
-    }
-
-    function changePage(page) {
-        currentPage = page;
-        renderQnaList();
-    }
-
-    // ✨ 데이터베이스에 새 글 저장하기
-    function addNewQuestion() {
-        const authorInput = document.getElementById('new-author').value;
-        const titleInput = document.getElementById('new-title').value;
-        const contentInput = document.getElementById('new-content').value;
-
-        if (!titleInput.trim() || !contentInput.trim()) {
-            alert("질문 제목과 내용을 모두 입력해주세요!");
-            return;
-        }
-
-        const today = new Date();
-        const dateStr = today.getFullYear() + '.' + String(today.getMonth() + 1).padStart(2, '0') + '.' + String(today.getDate()).padStart(2, '0');
-
-        // 파이어베이스 DB에 밀어 넣기!
-        db.collection("qna_board").add({
-            title: titleInput,
-            author: authorInput || "익명",
-            date: dateStr,
-            content: contentInput,
-            adminReply: null,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            // 성공하면 창 비우기
-            document.getElementById('new-author').value = '';
-            document.getElementById('new-title').value = '';
-            document.getElementById('new-content').value = '';
-            currentPage = 1;
-            alert("질문이 데이터베이스에 성공적으로 등록되었습니다! (새로고침해도 남아있습니다)");
-        }).catch((error) => {
-            console.error("저장 에러:", error);
-            alert("저장 중 오류가 발생했습니다. 파이어베이스 권한 설정을 확인해주세요.");
-        });
+    // 4. 답변 저장 기능 (관리자 전용)
+    function saveReply(id) {
+        const replyText = document.getElementById(`reply-input-${id}`).value;
+        db.collection("qna_board").doc(id).update({
+            adminReply: replyText
+        }).then(() => alert("답변이 저장되었습니다."));
     }
 </script>
 
