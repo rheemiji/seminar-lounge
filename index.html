@@ -9,23 +9,15 @@
         body { font-family: 'Pretendard', sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; color: #333; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         
-        /* 🏠 1단계: 기수 선택 화면 (썸네일 수정) */
+        /* 🏠 1단계: 기수 선택 홈 */
         #home-view { text-align: center; padding: 100px 20px; }
-        .batch-card { 
-            max-width: 600px; margin: 50px auto; background: white; border-radius: 20px; 
-            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); cursor: pointer; 
-            transition: all 0.3s; border: 2px solid transparent; 
-        }
+        .batch-card { max-width: 500px; margin: 50px auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s; border: 2px solid #e2e8f0; }
         .batch-card:hover { transform: translateY(-10px); border-color: #2979ff; }
-        .batch-thumb { 
-            background: linear-gradient(135deg, #4dabf7, #217afc); 
-            height: 200px; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; color: white; 
-        }
+        .batch-thumb { background: linear-gradient(135deg, #4dabf7, #217afc); height: 220px; display: flex; align-items: center; justify-content: center; color: white; }
         .batch-thumb h2 { font-size: 2.2rem; margin: 0; font-weight: 800; letter-spacing: -1px; }
-        .batch-info { padding: 20px; font-weight: 600; color: #444; font-size: 1.1rem; background: #fff; }
+        .batch-info { padding: 20px; font-weight: 700; color: #2979ff; font-size: 1.2rem; background: #fff; }
 
-        /* 📱 2단계: 내부 라운지 (처음엔 숨김) */
+        /* 📱 2단계: 내부 라운지 */
         #lounge-view { display: none; padding-top: 20px; }
         .header-banner { background: linear-gradient(135deg, #2979ff 0%, #1c65eb 100%); color: white; text-align: center; padding: 40px 20px; border-radius: 12px; margin-bottom: 30px; position: relative; }
         .back-btn { position: absolute; left: 20px; top: 20px; background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; }
@@ -39,11 +31,15 @@
         input, textarea { padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; width: 100%; box-sizing: border-box; margin-bottom: 10px; font-family: inherit; }
         
         .list-row { display: flex; align-items: center; padding: 15px 10px; border-bottom: 1px solid #e2e8f0; cursor: pointer; }
+        .list-row:hover { background: #f8fafc; }
         .list-content { display: none; padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .list-content.active { display: block; }
         
+        .faq-q { color: #2979ff; font-weight: bold; margin-right: 10px; }
+        .faq-a { background: #f0f7ff; padding: 15px; border-radius: 8px; border-left: 4px solid #2979ff; margin-top: 10px; }
+
         .admin-tool { background: #fffde7; padding: 15px; border-radius: 8px; border: 1px dashed #fbc02d; margin-top: 15px; display: none; text-align: left; color: #333; }
-        #admin-btn { position: fixed; bottom: 20px; right: 20px; opacity: 0.3; background: none; border: none; cursor: pointer; font-size: 10px; }
+        #admin-btn { position: fixed; bottom: 20px; right: 20px; opacity: 0.2; background: none; border: none; cursor: pointer; font-size: 10px; color: #999; }
         
         @media (max-width: 768px) { .dashboard { grid-template-columns: 1fr; } }
     </style>
@@ -52,13 +48,10 @@
 
 <div class="container">
     <div id="home-view">
-        <h1 style="font-size: 2.2rem; letter-spacing: -1px;">성공적인 협상 세미나 라운지</h1>
-        <p style="color: #666;">수강 중인 기수를 선택하고 비밀번호를 입력해 주세요.</p>
-        
+        <h1 style="font-size: 2.2rem; letter-spacing: -1px; margin-bottom: 10px;">성공적인 협상 세미나 라운지</h1>
+        <p style="color: #666; margin-bottom: 30px;">수강 중인 기수를 선택하고 비밀번호를 입력해 주세요.</p>
         <div class="batch-card" onclick="checkBatchPassword()">
-            <div class="batch-thumb">
-                <h2>구매 협상 1기</h2>
-            </div>
+            <div class="batch-thumb"><h2>구매 협상 1기</h2></div>
             <div class="batch-info">바로가기</div>
         </div>
     </div>
@@ -73,7 +66,7 @@
         <div class="dashboard">
             <div class="card">
                 <h2>📢 공지사항</h2>
-                <div id="v-notice" style="line-height:1.7; white-space:pre-wrap;">데이터를 불러오는 중입니다.</div>
+                <div id="v-notice" style="line-height:1.7; white-space:pre-wrap;">데이터를 불러오는 중입니다...</div>
                 <div class="admin-tool admin-visible">
                     <textarea id="e-notice" rows="3"></textarea>
                     <button class="btn" onclick="saveNotice()">공지 저장</button>
@@ -87,6 +80,40 @@
                 <div class="admin-tool admin-visible">
                     <input type="text" id="e-lib-link" placeholder="구글 드라이브 링크">
                     <button class="btn" onclick="saveLib()">링크 저장</button>
+                </div>
+            </div>
+
+            <div class="card full-width">
+                <h2>📌 FAQ (자주 묻는 질문)</h2>
+                <div id="faq-list-container">
+                    <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
+                        <span class="faq-q">Q.</span> <span>세미나 강의 교안은 언제 업로드되나요?</span>
+                    </div>
+                    <div class="list-content">
+                        <div class="faq-a"><strong>A.</strong> 강의 교안은 매주 세미나 시작 1시간 전 [자료실] 섹션에 업로드됩니다.</div>
+                    </div>
+
+                    <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
+                        <span class="faq-q">Q.</span> <span>지난 강의의 다시보기 영상이 제공되나요?</span>
+                    </div>
+                    <div class="list-content">
+                        <div class="faq-a"><strong>A.</strong> 네, 복습을 위해 세미나 종료 후 24시간 이내에 [공지사항]을 통해 다시보기 링크가 공유됩니다.</div>
+                    </div>
+
+                    <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
+                        <span class="faq-q">Q.</span> <span>과제 제출 기한을 놓쳤는데 어떻게 하나요?</span>
+                    </div>
+                    <div class="list-content">
+                        <div class="faq-a"><strong>A.</strong> 과제 제출이 늦어질 경우 [Q&A 게시판]에 사유와 함께 글을 남겨주시면 운영진이 확인 후 답변 드립니다.</div>
+                    </div>
+                </div>
+                <div id="db-faq-list"></div>
+                
+                <div class="admin-tool admin-visible">
+                    <h4 style="margin:20px 0 10px 0;">새 FAQ 등록</h4>
+                    <input type="text" id="new-faq-q" placeholder="질문 입력">
+                    <textarea id="new-faq-a" rows="2" placeholder="답변 입력"></textarea>
+                    <button class="btn" onclick="addFaq()">FAQ 추가</button>
                 </div>
             </div>
 
@@ -106,7 +133,7 @@
     </div>
 </div>
 
-<button id="admin-btn" onclick="adminLogin()">Admin</button>
+<button id="admin-btn" onclick="adminLogin()">Admin Access</button>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
@@ -125,22 +152,18 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-    // 🔑 수강생 비밀번호 체크
-    function checkBatchPassword() {
-        const input = prompt("수강생 비밀번호를 입력하세요.");
+    window.checkBatchPassword = function() {
+        const input = prompt("수강생 비밀번호를 입력해 주세요.");
         if(input === "202605") {
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('lounge-view').style.display = 'block';
             loadData();
-        } else {
-            alert("비밀번호가 올바르지 않습니다.");
-        }
+        } else if(input !== null) alert("비밀번호 불일치");
     }
 
-    // 🔒 관리자 로그인
-    function adminLogin() {
-        const pw = prompt("관리자 비밀번호를 입력하세요.");
-        auth.signInWithEmailAndPassword("morethanbcorp@gmail.com", pw || "").catch(()=>alert("관리자 인증 실패"));
+    window.adminLogin = function() {
+        const pw = prompt("관리자 암호");
+        auth.signInWithEmailAndPassword("morethanbcorp@gmail.com", pw || "").catch(()=>alert("인증 실패"));
     }
 
     auth.onAuthStateChanged(user => {
@@ -151,26 +174,52 @@
         db.collection("settings").doc("batch1").onSnapshot(doc => {
             if(doc.exists) {
                 const d = doc.data();
-                document.getElementById('v-notice').innerText = d.notice || "공지사항이 없습니다.";
+                document.getElementById('v-notice').innerText = d.notice || "등록된 공지가 없습니다.";
                 document.getElementById('e-notice').value = d.notice || "";
                 window.libLink = d.libLink || "";
             }
         });
+        loadFaqs();
         loadQnas();
     }
 
-    function saveNotice() { db.collection("settings").doc("batch1").set({ notice: document.getElementById('e-notice').value }, {merge:true}).then(()=>alert("저장완료")); }
-    function saveLib() { db.collection("settings").doc("batch1").set({ libLink: document.getElementById('e-lib-link').value }, {merge:true}).then(()=>alert("저장완료")); }
-    function openLib() { if(window.libLink) window.open(window.libLink); else alert("등록된 링크가 없습니다."); }
+    window.saveNotice = function() { db.collection("settings").doc("batch1").set({ notice: document.getElementById('e-notice').value }, {merge:true}).then(()=>alert("저장됨")); }
+    window.saveLib = function() { db.collection("settings").doc("batch1").set({ libLink: document.getElementById('e-lib-link').value }, {merge:true}).then(()=>alert("저장됨")); }
+    window.openLib = function() { if(window.libLink) window.open(window.libLink); else alert("링크 없음"); }
 
-    function addQa() {
+    window.addFaq = function() {
+        const q = document.getElementById('new-faq-q').value;
+        const a = document.getElementById('new-faq-a').value;
+        if(!q || !a) return;
+        db.collection("faqs_batch1").add({ q, a, createdAt: firebase.firestore.FieldValue.serverTimestamp() }).then(()=>alert("등록 완료"));
+    }
+
+    function loadFaqs() {
+        db.collection("faqs_batch1").orderBy("createdAt", "asc").onSnapshot(snap => {
+            const container = document.getElementById('db-faq-list'); container.innerHTML = '';
+            snap.forEach(doc => {
+                const d = doc.data();
+                container.innerHTML += `
+                    <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
+                        <span class="faq-q">Q.</span> <span>${d.q}</span>
+                    </div>
+                    <div class="list-content">
+                        <div class="faq-a"><strong>A.</strong> ${d.a}</div>
+                        ${auth.currentUser ? `<button class="btn btn-small" style="background:red; margin-top:10px;" onclick="deleteFaq('${doc.id}')">삭제</button>` : ""}
+                    </div>`;
+            });
+        });
+    }
+    window.deleteFaq = function(id) { if(confirm("삭제하시겠습니까?")) db.collection("faqs_batch1").doc(id).delete(); }
+
+    window.addQa = function() {
         const title = document.getElementById('q-title').value;
         const content = document.getElementById('q-content').value;
         if(!title || !content) return;
         db.collection("qnas_batch1").add({
             author: document.getElementById('q-author').value || "익명",
             title, content, reply: "", createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(()=> { alert("등록완료"); location.reload(); });
+        }).then(()=> { alert("등록 완료"); document.getElementById('q-title').value=''; document.getElementById('q-content').value=''; });
     }
 
     function loadQnas() {
@@ -178,7 +227,7 @@
             const list = document.getElementById('qa-list'); list.innerHTML = '';
             snap.forEach(doc => {
                 const d = doc.data();
-                const status = d.reply ? "<b style='color:blue'>[답변완료]</b>" : "[대기중]";
+                const status = d.reply ? "<b style='color:#2979ff'>[답변완료]</b>" : "<b style='color:#999'>[대기중]</b>";
                 list.innerHTML += `
                     <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
                         <div style="flex:1">${status} ${d.title}</div>
@@ -186,14 +235,14 @@
                     </div>
                     <div class="list-content">
                         <p>Q: ${d.content}</p>
-                        <div style="background:#f0f7ff; padding:15px; border-radius:8px;">A: ${d.reply || "곧 답변드리겠습니다."}</div>
-                        ${auth.currentUser ? `<textarea id="reply-${doc.id}" style="margin-top:10px;">${d.reply || ""}</textarea><button class="btn" onclick="saveReply('${doc.id}')">답변저장</button>` : ""}
+                        <div style="background:#f0f7ff; padding:15px; border-radius:8px;">A: ${d.reply || "관리자가 답변을 준비 중입니다."}</div>
+                        ${auth.currentUser ? `<textarea id="reply-${doc.id}" style="margin-top:10px;">${d.reply || ""}</textarea><button class="btn btn-small" onclick="saveReply('${doc.id}')">답변저장</button>` : ""}
                     </div>`;
             });
         });
     }
-    function saveReply(id) {
-        db.collection("qnas_batch1").doc(id).update({ reply: document.getElementById('reply-'+id).value }).then(()=>alert("답변완료"));
+    window.saveReply = function(id) {
+        db.collection("qnas_batch1").doc(id).update({ reply: document.getElementById('reply-'+id).value }).then(()=>alert("답변 저장됨"));
     }
 </script>
 </body>
