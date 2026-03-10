@@ -3,30 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>성공적인 협상 세미나 통합 라운지</title>
+    <title>성공적인 협상 세미나 라운지</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
         body { font-family: 'Pretendard', sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; color: #333; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         
-        /* 🏠 1단계: 기수 선택 화면 */
-        #home-view { text-align: center; padding: 80px 20px; }
-        .batch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 50px; justify-content: center; }
-        .batch-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s; border: 3px solid transparent; }
+        /* 🏠 1단계: 기수 선택 화면 (썸네일 수정) */
+        #home-view { text-align: center; padding: 100px 20px; }
+        .batch-card { 
+            max-width: 600px; margin: 50px auto; background: white; border-radius: 20px; 
+            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); cursor: pointer; 
+            transition: all 0.3s; border: 2px solid transparent; 
+        }
         .batch-card:hover { transform: translateY(-10px); border-color: #2979ff; }
-        .batch-thumb { background: linear-gradient(135deg, #64b5f6, #1c65eb); height: 160px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; }
-        .batch-info { padding: 20px; }
-        .batch-info h3 { margin: 0; font-size: 1.25rem; }
+        .batch-thumb { 
+            background: linear-gradient(135deg, #4dabf7, #217afc); 
+            height: 200px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; color: white; 
+        }
+        .batch-thumb h2 { font-size: 2.2rem; margin: 0; font-weight: 800; letter-spacing: -1px; }
+        .batch-info { padding: 20px; font-weight: 600; color: #444; font-size: 1.1rem; background: #fff; }
 
-        /* 📱 2단계: 개별 기수 라운지 */
+        /* 📱 2단계: 내부 라운지 (처음엔 숨김) */
         #lounge-view { display: none; padding-top: 20px; }
         .header-banner { background: linear-gradient(135deg, #2979ff 0%, #1c65eb 100%); color: white; text-align: center; padding: 40px 20px; border-radius: 12px; margin-bottom: 30px; position: relative; }
-        .back-btn { position: absolute; left: 20px; top: 20px; background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+        .back-btn { position: absolute; left: 20px; top: 20px; background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; }
         
         .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .full-width { grid-column: 1 / -1; }
-        h2 { font-size: 1.2rem; border-bottom: 2px solid #2979ff; padding-bottom: 10px; margin-top: 0; }
+        h2 { font-size: 1.2rem; border-bottom: 2px solid #2979ff; padding-bottom: 10px; margin-top: 0; display: flex; align-items: center; gap: 8px; }
         
         .btn { padding: 10px 18px; background: #2979ff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-family: inherit; }
         input, textarea { padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; width: 100%; box-sizing: border-box; margin-bottom: 10px; font-family: inherit; }
@@ -35,10 +42,8 @@
         .list-content { display: none; padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .list-content.active { display: block; }
         
-        /* 관리자 도구 */
-        .admin-tool { background: #fffde7; padding: 15px; border-radius: 8px; border: 1px dashed #fbc02d; margin-top: 15px; display: none; color: #333; text-align: left; }
-        #admin-login-area { position: fixed; bottom: 20px; right: 20px; z-index: 10000; opacity: 0.4; }
-        #admin-login-area:hover { opacity: 1; }
+        .admin-tool { background: #fffde7; padding: 15px; border-radius: 8px; border: 1px dashed #fbc02d; margin-top: 15px; display: none; text-align: left; color: #333; }
+        #admin-btn { position: fixed; bottom: 20px; right: 20px; opacity: 0.3; background: none; border: none; cursor: pointer; font-size: 10px; }
         
         @media (max-width: 768px) { .dashboard { grid-template-columns: 1fr; } }
     </style>
@@ -47,65 +52,52 @@
 
 <div class="container">
     <div id="home-view">
-        <h1 style="font-size: 2.2rem; letter-spacing: -1.5px;">성공적인 협상 세미나 라운지</h1>
+        <h1 style="font-size: 2.2rem; letter-spacing: -1px;">성공적인 협상 세미나 라운지</h1>
         <p style="color: #666;">수강 중인 기수를 선택하고 비밀번호를 입력해 주세요.</p>
         
-        <div class="batch-grid" id="batch-list">
-            <div class="batch-card" onclick="alert('데이터를 불러오고 있습니다. 잠시만 기다려주세요!')">
-                <div class="batch-thumb">구매협상 1기</div>
-                <div class="batch-info"><h3>로딩 중...</h3></div>
+        <div class="batch-card" onclick="checkBatchPassword()">
+            <div class="batch-thumb">
+                <h2>구매 협상 1기</h2>
             </div>
-        </div>
-
-        <div class="admin-visible" style="margin-top: 40px; display:none;">
-            <button class="btn" style="background:#4caf50" onclick="addNewBatch()">+ 새로운 기수 추가</button>
+            <div class="batch-info">바로가기</div>
         </div>
     </div>
 
     <div id="lounge-view">
         <div class="header-banner">
-            <button class="back-btn" onclick="location.reload()">← 기수 선택으로</button>
-            <h1 id="v-title">구매협상 1기 라운지</h1>
-            <p id="v-subtitle">환영합니다!</p>
-            
-            <div class="admin-tool admin-visible">
-                <p><strong>[관리자 전용 설정]</strong></p>
-                <input type="text" id="e-title" placeholder="기수명 수정">
-                <input type="text" id="e-subtitle" placeholder="부제목 수정">
-                <input type="text" id="e-password" placeholder="수강생 입장 비밀번호">
-                <button class="btn" onclick="saveBatchSets()">설정 저장</button>
-            </div>
+            <button class="back-btn" onclick="location.reload()">← 뒤로가기</button>
+            <h1 id="v-title">구매 협상 1기 라운지</h1>
+            <p id="v-subtitle">반갑습니다! 세미나 자료와 Q&A를 확인하세요.</p>
         </div>
 
         <div class="dashboard">
             <div class="card">
                 <h2>📢 공지사항</h2>
-                <div id="v-notice" style="line-height:1.6; white-space:pre-wrap;">공지를 불러오고 있습니다.</div>
+                <div id="v-notice" style="line-height:1.7; white-space:pre-wrap;">데이터를 불러오는 중입니다.</div>
                 <div class="admin-tool admin-visible">
-                    <textarea id="e-notice" rows="4"></textarea>
-                    <button class="btn" onclick="saveNotice()">공지 업데이트</button>
+                    <textarea id="e-notice" rows="3"></textarea>
+                    <button class="btn" onclick="saveNotice()">공지 저장</button>
                 </div>
             </div>
 
             <div class="card">
                 <h2>📁 자료실</h2>
-                <p id="v-lib-text" style="color:#666; font-size:0.9rem; margin-bottom:15px;">강의안 다운로드</p>
-                <button class="btn" style="width:100%;" onclick="openLib()">파일 다운로드</button>
+                <p id="v-lib-text" style="color:#666; font-size:0.9rem; margin-bottom:15px;">주차별 강의 교안을 확인하세요.</p>
+                <button class="btn" style="width:100%;" onclick="openLib()">강의 교안 다운로드</button>
                 <div class="admin-tool admin-visible">
-                    <input type="text" id="e-lib-text" placeholder="자료실 설명">
-                    <input type="text" id="e-lib-link" placeholder="다운로드 주소(구글링크)">
-                    <button class="btn" onclick="saveLib()">자료실 업데이트</button>
+                    <input type="text" id="e-lib-link" placeholder="구글 드라이브 링크">
+                    <button class="btn" onclick="saveLib()">링크 저장</button>
                 </div>
             </div>
 
             <div class="card full-width">
                 <h2>💬 Q&A 게시판</h2>
-                <div style="background:#f8fafc; padding:20px; border-radius:10px; margin-bottom:20px; border:1px solid #e2e8f0;">
+                <div style="background:#f8fafc; padding:20px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:20px;">
                     <div style="display:flex; gap:10px;">
                         <input type="text" id="q-author" placeholder="닉네임" style="width:120px;">
                         <input type="text" id="q-title" placeholder="질문 제목" style="flex:1;">
                     </div>
-                    <textarea id="q-content" placeholder="궁금한 내용을 남겨주세요." rows="3"></textarea>
+                    <textarea id="q-content" placeholder="질문 내용을 적어주세요." rows="3"></textarea>
                     <div style="text-align:right;"><button class="btn" onclick="addQa()">질문 등록</button></div>
                 </div>
                 <div id="qa-list"></div>
@@ -114,10 +106,7 @@
     </div>
 </div>
 
-<div id="admin-login-area">
-    <button id="login-btn" onclick="adminLogin()" style="border:none; background:none; color:#ccc; cursor:pointer;">Admin</button>
-    <button id="logout-btn" onclick="adminLogout()" style="display:none; color:red; border:none; background:none; cursor:pointer;">Logout</button>
-</div>
+<button id="admin-btn" onclick="adminLogin()">Admin</button>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
@@ -136,138 +125,76 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-    let curBatchId = "";
-    let curBatchData = {};
-
-    // 1. 관리자 인증
-    window.adminLogin = function() {
-        const pw = prompt("관리자 비밀번호를 입력하세요.");
-        auth.signInWithEmailAndPassword("morethanbcorp@gmail.com", pw || "").catch(()=>alert("비밀번호가 틀렸습니다."));
-    };
-    window.adminLogout = function() { auth.signOut().then(()=>location.reload()); };
-    auth.onAuthStateChanged(user => {
-        document.querySelectorAll('.admin-visible').forEach(el => el.style.display = user ? 'block' : 'none');
-        document.getElementById('logout-btn').style.display = user ? 'inline' : 'none';
-        document.getElementById('login-btn').style.display = user ? 'none' : 'inline';
-    });
-
-    // 2. 기수 목록 불러오기 (홈)
-    db.collection("batches").orderBy("createdAt", "asc").onSnapshot(snap => {
-        if(snap.empty) {
-            // 초기 데이터 생성 (구매협상 1기)
-            db.collection("batches").add({
-                title: "구매협상 1기", subtitle: "성공적인 협상을 위한 첫 걸음", password: "202605",
-                notice: "1기 여러분 반갑습니다!", libText: "강의 교안 다운로드", libLink: "", createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            return;
-        }
-        const list = document.getElementById('batch-list'); list.innerHTML = '';
-        snap.forEach(doc => {
-            const d = doc.data();
-            list.innerHTML += `
-                <div class="batch-card" onclick="enterGate('${doc.id}', '${d.password}')">
-                    <div class="batch-thumb">${d.title}</div>
-                    <div class="batch-info"><h3>${d.title} 입장하기</h3></div>
-                </div>`;
-        });
-    });
-
-    // 3. 게이트웨이 (입장 체크)
-    window.enterGate = function(id, pw) {
-        if(auth.currentUser) { loadLounge(id); return; }
+    // 🔑 수강생 비밀번호 체크
+    function checkBatchPassword() {
         const input = prompt("수강생 비밀번호를 입력하세요.");
-        if(input === pw) loadLounge(id);
-        else alert("비밀번호가 틀렸습니다.");
-    };
-
-    function loadLounge(id) {
-        curBatchId = id;
-        document.getElementById('home-view').style.display = 'none';
-        document.getElementById('lounge-view').style.display = 'block';
-        window.scrollTo(0,0);
-
-        db.collection("batches").doc(id).onSnapshot(doc => {
-            const d = doc.data(); curBatchData = d;
-            document.getElementById('v-title').innerText = d.title;
-            document.getElementById('v-subtitle').innerText = d.subtitle;
-            document.getElementById('v-notice').innerText = d.notice || "공지가 없습니다.";
-            document.getElementById('v-lib-text').innerText = d.libText || "자료실";
-            // 관리자 폼 채우기
-            document.getElementById('e-title').value = d.title;
-            document.getElementById('e-subtitle').value = d.subtitle;
-            document.getElementById('e-password').value = d.password;
-            document.getElementById('e-notice').value = d.notice || "";
-            document.getElementById('e-lib-text').value = d.libText || "";
-            document.getElementById('e-lib-link').value = d.libLink || "";
-        });
-        loadQnas(id);
+        if(input === "202605") {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('lounge-view').style.display = 'block';
+            loadData();
+        } else {
+            alert("비밀번호가 올바르지 않습니다.");
+        }
     }
 
-    // 4. 데이터 관리 (관리자 전용)
-    window.addNewBatch = function() {
-        const name = prompt("새 기수 이름을 입력하세요 (예: 구매협상 2기)");
-        if(!name) return;
-        db.collection("batches").add({
-            title: name, subtitle: "환영합니다!", password: "1234", notice: "", libText: "", libLink: "", createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(()=>alert("기수가 추가되었습니다."));
-    };
-    window.saveBatchSets = function() {
-        db.collection("batches").doc(curBatchId).update({
-            title: document.getElementById('e-title').value,
-            subtitle: document.getElementById('e-subtitle').value,
-            password: document.getElementById('e-password').value
-        }).then(()=>alert("기본 설정 저장됨"));
-    };
-    window.saveNotice = function() { db.collection("batches").doc(curBatchId).update({ notice: document.getElementById('e-notice').value }).then(()=>alert("공지 저장됨")); };
-    window.saveLib = function() { db.collection("batches").doc(curBatchId).update({ libText: document.getElementById('e-lib-text').value, libLink: document.getElementById('e-lib-link').value }).then(()=>alert("자료실 저장됨")); };
-    window.openLib = function() { if(curBatchData.libLink) window.open(curBatchData.libLink); else alert("다운로드 링크가 등록되지 않았습니다."); };
+    // 🔒 관리자 로그인
+    function adminLogin() {
+        const pw = prompt("관리자 비밀번호를 입력하세요.");
+        auth.signInWithEmailAndPassword("morethanbcorp@gmail.com", pw || "").catch(()=>alert("관리자 인증 실패"));
+    }
 
-    // 5. Q&A 기능 (기수별 분리)
-    window.addQa = function() {
-        const author = document.getElementById('q-author').value || "익명";
+    auth.onAuthStateChanged(user => {
+        document.querySelectorAll('.admin-visible').forEach(el => el.style.display = user ? 'block' : 'none');
+    });
+
+    function loadData() {
+        db.collection("settings").doc("batch1").onSnapshot(doc => {
+            if(doc.exists) {
+                const d = doc.data();
+                document.getElementById('v-notice').innerText = d.notice || "공지사항이 없습니다.";
+                document.getElementById('e-notice').value = d.notice || "";
+                window.libLink = d.libLink || "";
+            }
+        });
+        loadQnas();
+    }
+
+    function saveNotice() { db.collection("settings").doc("batch1").set({ notice: document.getElementById('e-notice').value }, {merge:true}).then(()=>alert("저장완료")); }
+    function saveLib() { db.collection("settings").doc("batch1").set({ libLink: document.getElementById('e-lib-link').value }, {merge:true}).then(()=>alert("저장완료")); }
+    function openLib() { if(window.libLink) window.open(window.libLink); else alert("등록된 링크가 없습니다."); }
+
+    function addQa() {
         const title = document.getElementById('q-title').value;
         const content = document.getElementById('q-content').value;
-        if(!title || !content) return alert("내용을 입력해주세요.");
-        db.collection("batches").doc(curBatchId).collection("qnas").add({
-            author, title, content, reply: "", createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(()=>{
-            alert("질문이 등록되었습니다.");
-            document.getElementById('q-title').value = ''; document.getElementById('q-content').value = '';
-        });
-    };
+        if(!title || !content) return;
+        db.collection("qnas_batch1").add({
+            author: document.getElementById('q-author').value || "익명",
+            title, content, reply: "", createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(()=> { alert("등록완료"); location.reload(); });
+    }
 
-    function loadQnas(id) {
-        db.collection("batches").doc(id).collection("qnas").orderBy("createdAt", "desc").onSnapshot(snap => {
+    function loadQnas() {
+        db.collection("qnas_batch1").orderBy("createdAt", "desc").onSnapshot(snap => {
             const list = document.getElementById('qa-list'); list.innerHTML = '';
             snap.forEach(doc => {
                 const d = doc.data();
-                const status = d.reply ? "<b style='color:#2979ff'>[답변완료]</b>" : "<b style='color:#999'>[답변대기]</b>";
+                const status = d.reply ? "<b style='color:blue'>[답변완료]</b>" : "[대기중]";
                 list.innerHTML += `
                     <div class="list-row" onclick="this.nextElementSibling.classList.toggle('active')">
                         <div style="flex:1">${status} ${d.title}</div>
                         <div style="font-size:0.8rem; color:#999;">${d.author}</div>
                     </div>
                     <div class="list-content">
-                        <p><strong>Q:</strong> ${d.content}</p>
-                        <div style="background:#f0f7ff; padding:15px; border-radius:8px; border-left:4px solid #2979ff;">
-                            <strong>A (관리자):</strong> ${d.reply || "곧 답변을 드릴 예정입니다."}
-                        </div>
-                        ${auth.currentUser ? `
-                            <div style="margin-top:10px;">
-                                <textarea id="reply-${doc.id}" placeholder="답변 입력">${d.reply || ""}</textarea>
-                                <button class="btn" style="padding:5px 10px; font-size:0.8rem;" onclick="saveReply('${doc.id}')">답변 저장</button>
-                                <button class="btn" style="padding:5px 10px; font-size:0.8rem; background:red;" onclick="delQa('${doc.id}')">삭제</button>
-                            </div>` : ''}
+                        <p>Q: ${d.content}</p>
+                        <div style="background:#f0f7ff; padding:15px; border-radius:8px;">A: ${d.reply || "곧 답변드리겠습니다."}</div>
+                        ${auth.currentUser ? `<textarea id="reply-${doc.id}" style="margin-top:10px;">${d.reply || ""}</textarea><button class="btn" onclick="saveReply('${doc.id}')">답변저장</button>` : ""}
                     </div>`;
             });
         });
     }
-    window.saveReply = function(id) {
-        const txt = document.getElementById('reply-'+id).value;
-        db.collection("batches").doc(curBatchId).collection("qnas").doc(id).update({ reply: txt }).then(()=>alert("답변 완료!"));
-    };
-    window.delQa = function(id) { if(confirm("삭제할까요?")) db.collection("batches").doc(curBatchId).collection("qnas").doc(id).delete(); };
+    function saveReply(id) {
+        db.collection("qnas_batch1").doc(id).update({ reply: document.getElementById('reply-'+id).value }).then(()=>alert("답변완료"));
+    }
 </script>
-
 </body>
 </html>
